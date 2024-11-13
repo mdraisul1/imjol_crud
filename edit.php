@@ -31,7 +31,13 @@ if (isset($_POST['submit'])) {
     $updateSql = "UPDATE application SET web_name = ?, position = ?, company_name = ?, salary = ?, status = ?, job_link = ? WHERE id = ?";
     $updateStmt = $pdo->prepare($updateSql);
     
-   
+    try {
+        // Bind parameters including the id
+        $updateStmt->execute([$website_name, $position, $company_name, $salary, $status, $job_link, $id]);
+        header("Location: index.php");
+    } catch (PDOException $th) {
+        echo "Record not updated: " . $th->getMessage();
+    }
 }
     
 
