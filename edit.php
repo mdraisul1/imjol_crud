@@ -27,6 +27,10 @@ if (isset($_POST['submit'])) {
     $status = $_POST['status'];
     $job_link = $_POST['job_link'];
 
+    // Corrected SQL query
+    $updateSql = "UPDATE application SET web_name = ?, position = ?, company_name = ?, salary = ?, status = ?, job_link = ? WHERE id = ?";
+    $updateStmt = $pdo->prepare($updateSql);
+    
    
 }
     
