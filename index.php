@@ -1,4 +1,11 @@
+<?php 
+    require 'config/database.php';
 
+    $sql = "SELECT * FROM application ORDER BY id DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,10 +47,10 @@
                             <input type="text" class="form-control" name="company_name" id="companyName" placeholder="Company Name" required>
                         </td>
                         <td>
-                            <input type="text" class="form-control" name="salary" id="salaryExpectations" placeholder="Salary Expectations">
+                            <input type="text" class="form-control" name="salary" id="salaryExpectations" placeholder="Salary Expectations" required>
                         </td>
                         <td>
-                            <select class="form-control im-select" name="status" id="status">
+                            <select class="form-control im-select" name="status" id="status" required>
                                 <option value="Not Replied">Not Replied</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Replied">Replied</option>
@@ -79,7 +86,21 @@
                 </tr>
             </thead>
             <tbody>
-               
+                <?php foreach($data as $alldata => $data): ?>
+                <tr>    
+                    <td><?php echo $alldata +1; ?></td>
+                    <td><?php echo htmlspecialchars($data['web_name']); ?></td>
+                    <td><?php echo htmlspecialchars($data['position']); ?></td>
+                    <td><?php echo htmlentities($data['company_name']); ?></td>
+                    <td><?php echo htmlentities($data['salary']); ?></td>
+                    <td><?php echo htmlentities($data['status']); ?></td>
+                    <td><?php echo htmlentities($data['job_link']) ?></td>
+                    <td class="action-btns">
+                        <a href="edit.php?id=<?php echo $data['id']; ?>" class="btn btn-success btn-sm">Edit</a>
+                        <a href="delete.php?id=<?php echo $data['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
