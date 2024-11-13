@@ -1,0 +1,23 @@
+table {
+    border: 2px solid green;
+}
+th, td {
+    border: 1px solid green;
+    text-align: center;
+    padding: 10px;
+}
+.action-btns button {
+    margin-right: 5px;
+}
+
+.im-table input {
+    border: none;
+}
+
+.form-control:focus{
+    box-shadow: none;
+}
+.im-select{
+    border: none;
+}
+
