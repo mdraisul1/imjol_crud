@@ -17,7 +17,7 @@ th, td {
 .form-control:focus{
     box-shadow: none;
 }
-.im-select{
+.im-select select{
     border: none;
 }
 
