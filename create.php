@@ -9,13 +9,14 @@ if (isset($_POST['submit'])) {
     $salary = $_POST['salary'];
     $status = $_POST['status'];
     $job_link = $_POST['job_link'];
+    $date = date('Y-m-d');
 
     // SQL query to insert data into the database
-    $sql = "INSERT INTO application(web_name, position, company_name, salary, status, job_link) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO application(web_name, position, company_name, salary, status, job_link, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     try {
         // Execute the query with the provided values
-        $stmt->execute([$website_name, $position, $company_name, $salary, $status, $job_link]);
+        $stmt->execute([$website_name, $position, $company_name, $salary, $status, $job_link, $date]);
         //successful submission
         header("Location: index.php");
         exit();
@@ -25,3 +26,7 @@ if (isset($_POST['submit'])) {
 } else {
     echo "No data inserted.";
 }
+
+
+
+

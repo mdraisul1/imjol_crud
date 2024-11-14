@@ -1,11 +1,20 @@
-<?php 
-    require 'config/database.php';
+<?php
+require 'config/database.php';
 
-    $sql = "SELECT * FROM application ORDER BY id DESC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all data from the database
+$sql = "SELECT * FROM application ORDER BY date DESC, id DESC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Group applications by date
+$groupedData = [];
+foreach ($data as $entry) {
+    $date = $entry['date'];
+    $groupedData[$date][] = $entry;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,44 +75,45 @@
         </form>
     </div>
 
-    <!-- Second Table -->
-    <div class="container mt-4">
-        <!-- Date -->
-        <div class="text-center my-3">
-            <h5>23 Jun 2024</h5>
+    <!-- Display applications grouped by date -->
+    <?php foreach ($groupedData as $date => $entries): ?>
+        <div class="container mt-4">
+            <div class="text-center my-3">
+                <h5><?php echo date('d M Y', strtotime($date)); ?></h5>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S/L</th>
+                        <th>Website Name</th>
+                        <th>Position</th>
+                        <th>Company Name</th>
+                        <th>Salary Expectations</th>
+                        <th>Status</th>
+                        <th>Job Post Link</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($entries as $index => $entry): ?>
+                    <tr>
+                        <td><?php echo $index + 1; ?></td>
+                        <td><?php echo htmlspecialchars($entry['web_name']); ?></td>
+                        <td><?php echo htmlspecialchars($entry['position']); ?></td>
+                        <td><?php echo htmlentities($entry['company_name']); ?></td>
+                        <td><?php echo htmlentities($entry['salary']); ?></td>
+                        <td><?php echo htmlentities($entry['status']); ?></td>
+                        <td><a href="<?php echo htmlentities($entry['job_link']); ?>" target="_blank"><?php echo htmlentities($entry['job_link']); ?></a></td>
+                        <td class="action-btns">
+                            <a href="edit.php?id=<?php echo $entry['id']; ?>" class="btn btn-success btn-sm">Edit</a>
+                            <a href="delete.php?id=<?php echo $entry['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>S/L</th>
-                    <th>Website Name</th>
-                    <th>Position</th>
-                    <th>Company Name</th>
-                    <th>Salary Expectations</th>
-                    <th>Status</th>
-                    <th>Job Post Link</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($data as $alldata => $data): ?>
-                <tr>    
-                    <td><?php echo $alldata +1; ?></td>
-                    <td><?php echo htmlspecialchars($data['web_name']); ?></td>
-                    <td><?php echo htmlspecialchars($data['position']); ?></td>
-                    <td><?php echo htmlentities($data['company_name']); ?></td>
-                    <td><?php echo htmlentities($data['salary']); ?></td>
-                    <td><?php echo htmlentities($data['status']); ?></td>
-                    <td><?php echo htmlentities($data['job_link']) ?></td>
-                    <td class="action-btns">
-                        <a href="edit.php?id=<?php echo $data['id']; ?>" class="btn btn-success btn-sm">Edit</a>
-                        <a href="delete.php?id=<?php echo $data['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+    <?php endforeach; ?>
 
     <!-- bootstrap js link  -->
     <script src="assets/js/bootstrap.bundle.min.js"></script>
