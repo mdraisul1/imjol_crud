@@ -17,7 +17,7 @@ try {
         web_name VARCHAR(255) NOT NULL,
         position VARCHAR(255) NOT NULL,
         company_name VARCHAR(255) NOT NULL,
-        salary DECIMAL(10, 2) NOT NULL,
+        salary VARCHAR(100) NOT NULL,
         status VARCHAR(50) NOT NULL,
         job_link TEXT NOT NULL,
         date DATE NOT NULL

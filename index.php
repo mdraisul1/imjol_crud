@@ -1,5 +1,6 @@
 <?php
 require 'config/database.php';
+// require 'curl.php';
 
 // Fetch all data from the database
 $sql = "SELECT * FROM application ORDER BY date DESC, id DESC";
@@ -24,6 +25,7 @@ foreach ($data as $entry) {
 
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- style css link  -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -100,7 +102,15 @@ foreach ($groupedData as $date => $entries):
                     <td><?php echo htmlspecialchars($entry['company_name']); ?></td>
                     <td><?php echo htmlspecialchars($entry['salary']); ?></td>
                     <td><?php echo htmlspecialchars($entry['status']); ?></td>
-                    <td><a href="<?php echo htmlspecialchars($entry['job_link']); ?>" target="_blank"><?php echo htmlspecialchars($entry['job_link']); ?></a></td>
+                    <td>
+                        <a href="<?php echo htmlspecialchars($entry['job_link']); ?>" target="_blank">
+                            <?php 
+                                // Extract the domain name from the job link
+                                $parsed_url = parse_url($entry['job_link']);
+                                echo htmlspecialchars($parsed_url['host']); 
+                            ?>
+                        </a>
+                    </td>
                     <td class="action-btns">
                         <a href="edit.php?id=<?php echo $entry['id']; ?>" class="btn btn-success btn-sm">Edit</a>
                         <a href="delete.php?id=<?php echo $entry['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
@@ -117,6 +127,7 @@ foreach ($groupedData as $date => $entries):
     <button id="loadMoreBtn" class="btn btn-primary">Load More</button>
 </div>
 
+<script src="assets/js/custom.js"></script>
 <!-- Bootstrap JavaScript -->
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 
