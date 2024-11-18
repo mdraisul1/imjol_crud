@@ -61,25 +61,45 @@ if (isset($data['values']) && count($data['values']) > 1) {
         $success = 0;
 
         foreach ($data['values'] as $key => $value) {
+        
+            // Skip the first row (assumes it's a header) and ensure the row contains data
             if ($key != 0 && count($value) > 0) {
-                $data = [];
-                $data['web_name'] = $pdo->quote($value[2]);
-                $data['position'] = $pdo->quote($value[3]);
-                $data['company_name'] = $pdo->quote($value[4]);
-                $data['salary'] = $pdo->quote($value[5]);
-                $data['status'] = $pdo->quote($value[6]);
-                $data['job_link'] = $pdo->quote($value[7]);
-                $data['date'] = empty($value[1]) ? null : $value[1];
-
+                // Prepare the data for insertion
+                $dataToInsert = [
+                    'web_name' => $value[2] ?? '', // Column 2: Web Name
+                    'position' => $value[3] ?? '', // Column 3: Position
+                    'company_name' => $value[4] ?? '', // Column 4: Company Name
+                    'salary' => $value[5] ?? '', // Column 5: Salary
+                    'status' => $value[6] ?? '', // Column 6: Status
+                    'job_link' => $value[7] ?? '', // Column 7: Job Link
+                    'date' => empty($value[1]) ? null : $value[1], // Column 1: Date (if empty, set to null)
+                ];
+        
                 try {
-                    $success += $stmt->execute($data);
-                } catch (\Throwable $th) {
-                    //throw $th;
+                    // Define your SQL query
+                    $query = "INSERT INTO application (web_name, position, company_name, salary, status, job_link, date) 
+                              VALUES (:web_name, :position, :company_name, :salary, :status, :job_link, :date)";
+        
+                    // Prepare the SQL statement
+                    $stmt = $pdo->prepare($query);
+        
+                    // Execute the prepared statement with bound parameters
+                    $stmt->execute([
+                        ':web_name' => $dataToInsert['web_name'],
+                        ':position' => $dataToInsert['position'],
+                        ':company_name' => $dataToInsert['company_name'],
+                        ':salary' => $dataToInsert['salary'],
+                        ':status' => $dataToInsert['status'],
+                        ':job_link' => $dataToInsert['job_link'],
+                        ':date' => $dataToInsert['date'],
+                    ]);
+                } catch (\PDOException $e) {
+                    // Handle any SQL errors
+                    echo "Error inserting data: " . $e->getMessage() . "<br>";
                 }
             }
         }
-
-
+        
         echo "$success number of Data inserted successfully.";
     } catch (Exception $e) {
         echo "Database Error: " . $e->getMessage();

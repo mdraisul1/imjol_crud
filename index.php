@@ -1,6 +1,6 @@
 <?php
 require 'config/database.php';
-require 'curl.php';
+// require 'curl.php';
 
 // Fetch all data from the database
 $sql = "SELECT * FROM application ORDER BY date DESC, id DESC";
@@ -105,9 +105,30 @@ foreach ($groupedData as $date => $entries):
                     <td>
                         <a href="<?php echo htmlspecialchars($entry['job_link']); ?>" target="_blank">
                             <?php 
-                                // Extract the domain name from the job link
-                                $parsed_url = parse_url($entry['job_link']);
-                                echo htmlspecialchars($parsed_url['host']); 
+                                $job_link = $entry['job_link'];
+
+                                // Ensure the URL is not empty
+                                if (!empty($job_link)) {
+                                    // Remove extra quotes if present
+                                    $job_link = trim($job_link, "'\"");
+
+                                    // Add http:// if scheme is missing
+                                    if (strpos($job_link, 'http://') === false && strpos($job_link, 'https://') === false) {
+                                        $job_link = 'http://' . $job_link;
+                                    }
+
+                                    // Parse the URL to extract the domain
+                                    $parsed_url = parse_url($job_link);
+
+                                    // Display domain if valid
+                                    if (isset($parsed_url['host'])) {
+                                        echo htmlspecialchars($parsed_url['host']); // Display domain
+                                    } else {
+                                        echo "Invalid URL";
+                                    }
+                                } else {
+                                    echo "No URL found";
+                                }
                             ?>
                         </a>
                     </td>
