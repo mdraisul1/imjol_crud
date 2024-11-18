@@ -1,6 +1,6 @@
 <?php
 require 'config/database.php';
-// require 'curl.php';
+require 'curl.php';
 
 // Fetch all data from the database
 $sql = "SELECT * FROM application ORDER BY date DESC, id DESC";
@@ -98,7 +98,7 @@ foreach ($groupedData as $date => $entries):
                 <tr>
                     <td><?php echo $index + 1; ?></td>
                     <td><?php echo htmlspecialchars($entry['web_name']); ?></td>
-                    <td><?php echo htmlspecialchars($entry['position']); ?></td>
+                    <td><?php echo htmlspecialchars(strlen($entry['position']) > 20 ? substr($entry['position'], 0, 20) : $entry['position']); ?></td>
                     <td><?php echo htmlspecialchars($entry['company_name']); ?></td>
                     <td><?php echo htmlspecialchars($entry['salary']); ?></td>
                     <td><?php echo htmlspecialchars($entry['status']); ?></td>

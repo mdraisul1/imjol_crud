@@ -1,0 +1,19 @@
+{
+    "name": "raisul/job-post",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "JobPost\\": "src/"
+        },
+        "files": [
+            "./src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Raisul Islam",
+            "email": "mdraju3248@gmail.com"
+        }
+    ],
+    "require": {}
+}
